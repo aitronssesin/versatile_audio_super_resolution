@@ -3,7 +3,7 @@
 # python3 setup.py sdist bdist_wheel
 """
 @File    :   setup.py.py    
-@Contact :   haoheliu@gmail.com
+@Contact :   aitronssesin@gmail.com
 @License :   (C)Copyright 2020-2100
 
 @Modify Time      @Author    @Version    @Desciption
@@ -22,14 +22,14 @@ import os
 import sys
 from shutil import rmtree
 
-from setuptools import find_packages, setup, Command
+from setuptools import find_packages, setup
 
 # Package meta-data.
-NAME = "audiosr"
+NAME = "audiosr_package"
 DESCRIPTION = "This package is written for text-to-audio/music generation."
-URL = "https://github.com/haoheliu/audiosr"
-EMAIL = "haoheliu@gmail.com"
-AUTHOR = "Haohe Liu"
+URL = "https://github.com/aitronssesin/versatile_audio_super_resolution"
+EMAIL = "aitronssesin@gmail.com"
+AUTHOR = "Aitron Emper"
 REQUIRES_PYTHON = ">=3.7.0"
 VERSION = "0.0.7"
 
@@ -39,7 +39,6 @@ REQUIRED = [
     "torchaudio>=0.13.0",
     "torchvision>=0.14.0",
     "tqdm",
-    "gradio",
     "pyyaml",
     "einops",
     "chardet",
@@ -48,23 +47,17 @@ REQUIRED = [
     "librosa==0.9.2",
     "scipy",
     "pandas",
+    "tokenizers>=0.14.1",
     "unidecode",
     "phonemizer",
     "torchlibrosa>=0.0.9",
-    "transformers==4.30.2",
-    "huggingface_hub",
+    "transformers",
+    "wget",
     "progressbar",
     "ftfy",
     "timm",
+    "matplotlib",
 ]
-
-# What packages are optional?
-EXTRAS = {}
-
-# The rest you shouldn't have to touch too much :)
-# ------------------------------------------------
-# Except, perhaps the License and Trove Classifiers!
-# If you do change the License, remember to change the Trove Classifier for that!
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -86,43 +79,6 @@ else:
     about["__version__"] = VERSION
 
 
-class UploadCommand(Command):
-    """Support setup.py upload."""
-
-    description = "Build and publish the package."
-    user_options = []
-
-    @staticmethod
-    def status(s):
-        """Prints things in bold."""
-        print("\033[1m{0}\033[0m".format(s))
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        try:
-            self.status("Removing previous builds…")
-            rmtree(os.path.join(here, "dist"))
-        except OSError:
-            pass
-
-        self.status("Building Source and Wheel (universal) distribution…")
-        os.system("{0} setup.py sdist bdist_wheel --universal".format(sys.executable))
-
-        self.status("Uploading the package to PyPI via Twine…")
-        os.system("twine upload dist/*")
-
-        self.status("Pushing git tags…")
-        os.system("git tag v{0}".format(about["__version__"]))
-        os.system("git push --tags")
-
-        sys.exit()
-
-
 # Where the magic happens:
 setup(
     name=NAME,
@@ -140,8 +96,8 @@ setup(
     #     'console_scripts': ['mycli=mymodule:cli'],
     # },
     install_requires=REQUIRED,
-    extras_require=EXTRAS,
     packages=find_packages(),
+    package_data={"audiosr_package": ["*/*.py", "*/*/*.py", "*/*/*/*.py", "*/*/*/*/*.py", "*/*.npy", "*/*/*.npy", "*/*.gz", "*/*/*.gz", "*/*.json", "*/*/*.json", "*/*/*/*.json"]},
     include_package_data=True,
     license="MIT",
     classifiers=[
@@ -154,9 +110,4 @@ setup(
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: PyPy",
     ],
-    # $ setup.py publish support.
-    cmdclass={
-        "upload": UploadCommand,
-    },
-    scripts=["bin/audiosr.cmd", "bin/audiosr"],
 )
